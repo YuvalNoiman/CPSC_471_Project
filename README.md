@@ -19,6 +19,7 @@ Team Members:
 > NAME, email
 > 
 > Patton Tang, pattontanges@csu.fullerton.edu
+> 
 > NAME, email
 > 
 > NAME, email
