@@ -1,6 +1,5 @@
 import socket
 import settings
-import time
 
 
 # server.py
@@ -8,6 +7,8 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((socket.gethostname(), 1234))  # 1234 is serverPort
     s.listen(settings.queueAmount)  # queue amount
+    localHeaderSize = settings.HEADERSIZE
+    localUtfEncoding = settings.defaultEncoding
 
     # Note: since we need(2) connections (one constant, one ephemeral, we may need to thread the former)
     while True:
@@ -17,7 +18,7 @@ def main():
 
         # May need an if statement here, depending on command
         outboundMessage = "This is the server speaking."
-        outboundMessage = f"{len(outboundMessage):<{settings.HEADERSIZE}}" + outboundMessage
+        outboundMessage = f"{len(outboundMessage):<{localHeaderSize}}" + outboundMessage
         '''
         # FORMAT:
         message = "STRING"
@@ -25,7 +26,7 @@ def main():
         '''
 
         # Here is where you'd add logic for sending multiple messages instead of just (1)
-        clientSocket.send(bytes(outboundMessage, settings.defaultEncoding))
+        clientSocket.send(bytes(outboundMessage, localUtfEncoding))
 
         clientSocket.close()
         # end while
