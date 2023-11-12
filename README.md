@@ -72,3 +72,7 @@ Be sure to use two connections for each FTP session - control & data
 - Control transfers all commands (ls, get, put) from client to server (as well as all status/error messages)
 - Data is established for EVERY file transfer using an ephemeral port
 
+Server should () with each message:
+1. Print out message
+2. Indicate Success or Failure of command
+3. Print fileName, and numberOfBytesTransferred
