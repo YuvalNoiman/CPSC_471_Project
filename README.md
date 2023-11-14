@@ -1,35 +1,43 @@
+<div align="center">
+
 # Simplified File Transfer Protocol
-### Server and Client
-Due: 12/01/2023 on Friday before midnight.
 
-Submitted by only (1) member via Canvas
-
-### Team:
-Groups of up to 5 students. No individual work is accepted.
-
-Course: **CPSC 471**. Project with Professor Kurban
-
-_The assignment must be coded in C++, Java, or Python._
-
-Language Chosen: **Python**
-
-Team Members:
-> NAME, email
->
-> Patton Tang, pattontanges@csu.fullerton.edu
->
-> NAME, email
->
-> NAME, email
->
-
-# Program Execution Instructions
-... (Work In Progress)
-...
-...
+</div>
 
 ## Overview:
 Implement a simplified FTP server and FTP client where the client connects to the server and supports BOTH uploading and downloading files to/from the server.
+
+
+## Program Execution Instructions
+### Invoke Server
+```sh
+server.py ...
+```
+### Invoke Client
+```sh
+client.py ...
+```
+
+## Using Command-Line Arguments
+### GET
+```sh
+> get FILENAME
+```
+
+### PUT
+```sh
+> put FILENAME
+```
+
+### LS
+```sh
+> ls
+```
+
+### QUIT
+```sh
+> quit
+```
 
 ### Problems:
 1. Not all data may arrive at the same time
@@ -42,15 +50,21 @@ Implement a simplified FTP server and FTP client where the client connects to th
 7. How will the receiving side know when to start/stop receiving the file?
 8. How to avoid overflowing TCP buffers?
 
-## Specifications:
+## Technical Specifications:
 The server is invoked as follows:
-> pythonserv.py<PORTNUMBER>
+```sh
+pythonserv.py<PORTNUMBER>
+```
 
 where <PORTNUMBER> specifies the port the FTP server accepts connection requests.
-> Example: pythonserv.py 1234
+```sh
+Example: pythonserv.py 1234
+```
 
 The FTP client is invoked as follows:
-> cli <\servermachine\> <\serverport\>
+```sh
+cli <servermachine> <serverport>
+```
 
 servermachine is the domain name of the server (ecs.fullerton.edu). Convert into 32-bit IP address using DNS lookup.
 
@@ -59,13 +73,12 @@ serverport example.
 
 
 The user must be able to execute the following commands.
-> ftp> get <\file name\> _(downloads file <file name> from the server)_
->
-> ftp> put <\file name\> _(uploads file <file name> to the server)_
->
-> ftp> ls _(lists files on the server)_
->
-> ftp> quit _(disconnects from the server and exits)_
+```sh
+ftp> get <file name> (downloads file <file name> from the server)
+ftp> put <file name> (uploads file <file name> to the server)
+ftp> ls (lists files on the server)
+ftp> quit (disconnects from the server and exits)
+```
 
 Be sure to use two connections for each FTP session - control & data
 - Control lasts throughout the FTP session
@@ -76,3 +89,27 @@ Server should () with each message:
 1. Print out message
 2. Indicate Success or Failure of command
 3. Print fileName, and numberOfBytesTransferred
+
+### Submission Specifications
+Due: 12/01/2023 on Friday before midnight.
+
+Submitted by only (1) member via Canvas
+
+Groups of up to 5 students. No individual work is accepted.
+
+_The assignment must be coded in C++, Java, or Python._
+
+## Meta
+Course: **CPSC 471**. Project with Professor Kurban.
+
+Language Chosen: **Python**
+
+https://github.com/YuvalNoiman/CPSC_471_Project/
+
+### Team Members:
+```sh
+Dylan Gunter, dgunter@csu.fullerton.edu
+Yuval Noiman, yuvalnoiman@csu.fullerton.edu
+Angel Zambrano, AngelZ@fullerton.edu
+Patton Tang, pattontanges@csu.fullerton.edu
+```
