@@ -47,6 +47,52 @@ while True:
     # Prompt command
     if command == "quit": sys.exit() or return 0 (?)
     elif command == "put": # print "receiving file FROM client"
+        listenPort = 1001  # temporary port on which to listen
+        cToS_WelcSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        cToS_WelcSock.bind(('', listenPort))
+        cToS_WelcSock.listen(1)
+
+
+        def recvAll(sock, numBytes):
+            recvBuff = ""
+            tmpBuff = ""
+
+            while len(recvBuff) < numBytes:
+                tmpBuff = sock.recv(numBytes)
+
+                if not tmpBuff:
+                    break
+                recvBuff += tmpBuff
+
+            return recvBuff
+
+        while True:
+            print "Waiting for connection..."
+
+            clientSock, addr = cToS_Welcome.accept()
+
+            print "Accepted connection from client: ", addr
+            print "\n"
+
+            fileData = ""
+            recvBuff = ""
+            fileSize = 0
+            fileSizeBuff = ""
+
+            fileSizeBuff = recvAll(clientSock, 10)
+            fileSize = int(fileSizeBuff)
+
+            print "The file size is ", fileSize
+
+            fileData = recvAll(clientSock, fileSize)
+
+            print "SUCCESS"
+            print "The file data is: "
+            print fileData
+
+            clientSock.close
+    cToS_WelcSock.close
+    
     elif command == "get": # print "sending file TO client"
     elif command == "ls":  # print directory, code given from Professor in .rar file
         for line in commands.getstatusoutput('ls -l'):
