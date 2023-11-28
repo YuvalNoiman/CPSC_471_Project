@@ -17,108 +17,130 @@ def recvAll(sock, numBytes):
         recvBuff += tempBuff.decode("utf-8")
     return recvBuff
 
-def main(SERVER_IP, SERVER_PORT):
 
+def main(PORT_NUMBER):
+   
+    #path = "C:\Users\dlgun\Desktop\serverFolder"
+    #isExist = os.path.exists(path)
+    #if not isExist:
+     #   os.makedirs(path)
 
-    # The client's socket
-    cliSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket created
+    # Create a socket
+    serverSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Attempt to connect to the server
-    cliSock.connect((SERVER_IP, SERVER_PORT)) #attempts to create at specified IP at specified port
-    
+    # Associate the socket with the port
+    serverSock.bind(('',PORT_NUMBER))
+
+    serverSock.listen(100)
+
     while True:
-        #gets command
-        msg = input("ftp> ")
+        print("Waiting for clients to connect...")
 
-        fielData = ""
+        # Accept a waiting connection
+        cliSock, cliInfo = serverSock.accept()
 
-        recvBuff = ""
+        print("Client connected from: " + str(cliInfo))
 
-        fileSize = 1024
+        # Receive the command the client has to send.
+        # This will receive at most 1024 bytes
+        while True:
+            cliMsg = cliSock.recv(1024)
+            deMsg = str(cliMsg.decode())
+            #prints client command
+            print("Client sent " + deMsg)
 
-        fileSizeBuff = ""
+            fileData = ""
 
-        #sends command to server
-        en_msg = msg.encode()
-        cliSock.send(en_msg)
+            recvBuff = ""
 
-        #ends if quit command      
-        if (msg == "quit"):
-        	break  
+            fileSize = 1024
 
-        #if get,put, or ls command create extra port to send data
-        elif (msg[0:3] == "get" or msg[0:3] == "put" or msg[0:2] == "ls"):
-                 #creates new socket
+            fileSizeBuff = ""
+
+            if (deMsg == "quit"):
+                 cliSock.close()
+                 break
+            elif (deMsg[0:3] == "get" or deMsg[0:3] == "put" or deMsg[0:2] == "ls"):
+                 #creates extra socket
                  extraSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                 #gets port number from emphemeral socket
-                 port = cliSock.recv(1024)
-                 port = int(str(port.decode()))
-                 #connects new socket to port
-                 extraSock.connect((SERVER_IP, port))
-                 #sends data
-                 print("extra socket connected")
-        #--------------------------------------------------------
-                 if (msg[0:3] == "get"):
-                     completeName = os.path.join(r"C:\Users\dlgun\Desktop\clientFolder", msg[4:])
-                     while fileSize >1023:
-                         
-                         fileSizeBuff = recvAll(extraSock, 10)
+                 extraSock.bind(('',0))
+                 extraSock.listen(100)
+                 print("Waiting for extra clients to connect...")
+                 #gets emepheral port number
+                 port = str(extraSock.getsockname()[1])
+                 #sends port to client to send data
+                 cliSock.send(port.encode())
+                 extraSock, cliInfo = extraSock.accept()
+                 print("Extra client connected from: " + str(cliInfo))
+         #---------------------------------------------------------------
+                 if (deMsg[0:3] == "get"):
+                     getFilename = deMsg[4:]
 
-                         fileSize = int(fileSizeBuff)
+                     gNumSent = 0
 
-                         print("the filesize is ", fileSize)
+                     gFileData = None
 
-                         gFileData = recvAll(extraSock, fileSize)
+                     gCompleteName = os.path.join(r"\Users\dlgun\Desktop\serverFolder", deMsg[4:])
 
-                         print("the file data is ", gFileData)
-                         f = open(completeName, "a")
-                         f.write(gFileData)
-                     #extraSock.recv(1024)
-                     f.close()
-                     extraSock.close()
-                     print("get data recieved")
-        #--------------------------------------------------------
-                 elif (msg[0:3] == "put"):
-                     filename = msg[4:]
-
-                     numSent = 0
-
-                     fileData = None
-
-                     fileObj = open(filename, "rb")
+                     gFileObj = open(gCompleteName, "rb")
 
                      while True:
-                        fileData = fileObj.read(1024)
+                         gFileData = gFileObj.read(1024)
 
-                        if(fileData):
+                         if(gFileData):
 
-                            dataSizeStr = str(len(fileData))
-                            print (dataSizeStr)
+                             dataSizeStr = str(len(gFileData))
+                             print(dataSizeStr)
 
-                            while len(dataSizeStr) < 10:
-                                dataSizeStr = "0" + dataSizeStr
+                             while len(dataSizeStr) < 10:
+                                 dataSizeStr = "0" + dataSizeStr
 
-                            fileData = bytes(dataSizeStr, 'utf-8') + fileData
+                             gFileData = bytes(dataSizeStr, 'utf-8') + gFileData
 
-                            numSent = 0
+                             numSent = 0
 
-                            print('sending...')
+                             print("sending...")
 
-                            while len(fileData) > numSent:
-                                print(fileData[numSent:])
-                                numSent += extraSock.send(fileData[numSent:])
-                               
-                                #l = fileObj.read(1024)
-                        else:
-                            break
-                        print("put file sent")
+                             while len(gFileData > numSent):
+                                 print(gFileData[numSent:])
+                                 numSent += extraSock.send(gFileData[numSent:]) 
+                         else:
+                              break
+           
+                         print("get sent")
                      extraSock.close()
-                     fileObj.close()
-                   
-if __name__ == "__main__":
-    SERVER_MACHINE =  "LAPTOP-SOOL70UB"#sys.argv[1] #"DESKTOP-E5K38H2" #  -argv[1] "LAPTOP-SOOL70UB", 
-    SERVER_PORT = sys.argv[2] #65500 
-    SERVER_PORT = int(SERVER_PORT)
-    SERVER_IP = socket.gethostbyname(SERVER_MACHINE)
+                     gFileObj.close()
+         #---------------------------------------------------------------
+                 elif (deMsg[0:3] == "put"):
+                     completeName = os.path.join(r"C:\Users\dlgun\Desktop\serverFolder", deMsg[4:])
+                     while fileSize > 1023:
 
-    main(SERVER_IP, SERVER_PORT)
+                        fileSizeBuff = recvAll(extraSock, 10)
+
+                        fileSize = int(fileSizeBuff)
+
+                        print("the filesize is ", fileSize)
+
+                        fileData = recvAll(extraSock, fileSize)
+
+                        print("the file data is ", fileData)
+                        f = open(completeName, "a")
+                        #x = extraSock.recv(1024)          
+                        f.write(fileData)
+                        #f.close()
+                        print("file recieved")
+                    
+         #---------------------------------------------------------------
+                 elif (deMsg[0:2] == "ls"):
+                     extraSock.send(cliMsg)
+                     print("ls sent")
+                 f.close()
+                 extraSock.close()
+                 print("the socket is closed")
+
+if __name__ == "__main__":
+    PORT_NUMBER = 65500 #sys.argv[1]
+
+    PORT_NUMBER = int(PORT_NUMBER)
+
+    main(PORT_NUMBER)
