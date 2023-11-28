@@ -39,3 +39,40 @@ def receiveMessage(clientSocket, fileSegmentSize):
                 fullMessage = ""
         # end While
     # end While
+
+def sendFile():
+    # make a temporary connection to send file from client to Sever
+    cToS_connSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    cToS_connSock.connect((socket.gethostname(),1001)) #serverPort for client to Server file transfer
+
+
+    fileName = sys.argv[1]
+    fileObj = open(fileName, "r")
+
+    numSent = 0
+    fileData = None
+
+    while True:
+        fileData = fileObj.read(65536) #read 65536 bytes of data
+
+        if fileData:  #EOF hit prevention
+            dataSizeStr = str(len(fileData))  #converts size of data read into a string
+
+            while len(dataSizeStr) < 10:  #until size of string is 10 bytes, prepend 0's
+                dataSizeStr = "0" + dataSizesStr
+
+            fileData = dataSizesStr + fileData  #prepend size of data to the file data
+
+            numSent = 0  #number of bytes sent
+
+            while len(fileData) > numSent:  #Send the data
+                numSent += connSock.send(fileData[numSent:])
+
+        else:  #file has been read
+            break
+    
+    print "Sent ", numSent, " bytes."
+
+    cToS_connSock.close()
+    fileObj.close()
+
