@@ -1,0 +1,17 @@
+1. Create a "serverFolder" on the device used to host the server
+2. Create a "clientFolder" on the device used to host the client
+3. on Client.py, enter the machine name of the server device at the bottom, and a port number as an arguement or integer
+4. On Client.py, on line 62, enter path of "clientFolder" into the join function. Now, add a text file the IDE
+(Im using Visual Studios 2022)
+5. On Server.py, enter the same port number as an integer or argv[2]
+6. On server.py, on line 83 and 114, enter the path of "serverFolder" into the join function
+7. Run server.py, then client.py
+8. ftp> put file.txt
+9. ftp> get file.txt
+
+***
+-Currently, put works for large files over 1024 bytes but not under 1024
+-get does not work due to an integer error on line 67
+-do not try to get a file that does not exist
+-code is not commented and very messy, sorry ive been working on this since 10 in the morning and im tired. I will
+try to have this code polished by the end of tomorrow
