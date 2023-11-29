@@ -59,7 +59,14 @@ def main(PORT_NUMBER):
                  for line in subprocess.getstatusoutput(cliMsg):
                     if (line != 0):
                         ls_message += str(line) + "\n"
-                 sendData(ls_message.encode(defaultEncoding), extraSock)
+                 increment = Max_Sent
+                 while True:
+                     message = ls_message[increment-Max_Sent:increment]
+                     if (message):
+                          sendData(ls_message.encode(defaultEncoding), extraSock)
+                          increment += Max_Sent
+                     else:
+                          break
                  print("ls message sent")
             extraSock.close()
             print("ephemeral socket closed")

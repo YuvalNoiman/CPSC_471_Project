@@ -50,9 +50,9 @@ def sendData(msg, sock):
 
 #recievesData
 def receiveData(sock):
-    msgSize = 10000
+    msgSize = Max_Sent
     #keep receiving while the msg hasn't been fully transferred
-    while msgSize > 10000-1:
+    while msgSize > Max_Sent-1:
         #receive Header bytes, should be size of data sent
         msgBuff = recvAll(sock, HEADERSIZE)
         msgSize = int(msgBuff)
