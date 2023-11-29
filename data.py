@@ -26,9 +26,9 @@ def recvAll(sock, numBytes):
     return recvBuff
 
 #sendsData
-def sendData(file_data, sock):
+def sendData(msg, sock):
     #gets size of data to be sent
-    dataSizeStr = str(len(file_data))
+    dataSizeStr = str(len(msg))
     #print(dataSizeStr)
 
     #add a header stating size of file
@@ -36,16 +36,31 @@ def sendData(file_data, sock):
         dataSizeStr = "0" + dataSizeStr
 
     #convert contents of file to bytes, attach header to front
-    file_data = dataSizeStr.encode(defaultEncoding) + file_data
+    msg = dataSizeStr.encode(defaultEncoding) + msg
 
     #number of bytes sent
     numSent = 0
 
     print("sending...")
 
-    while (len(file_data) > numSent):
-        #print(file_data[numSent:])
-        numSent += sock.send(file_data[numSent:])
+    while (len(msg) > numSent):
+        #print(msg[numSent:])
+        numSent += sock.send(msg[numSent:])
+
+
+#recievesData
+def receiveData(sock):
+    msgSize = 10000
+    #keep receiving while the msg hasn't been fully transferred
+    while msgSize > 10000-1:
+        #receive Header bytes, should be size of data sent
+        msgBuff = recvAll(sock, HEADERSIZE)
+        msgSize = int(msgBuff)
+        print("the message size is ", msgSize)
+        #receive the rest of the file
+        data = recvAll(sock, msgSize)
+        print("the message data is ", data)
+        return data
 
 #sends File data
 def sendFile(file_name, sock):

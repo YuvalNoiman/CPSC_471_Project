@@ -54,8 +54,8 @@ def main(SERVER_IP, SERVER_PORT):
             en_msg = msg.encode(defaultEncoding)
             cliSock.send(en_msg)
             extraSock = ephemeral_port(cliSock)
-            ls_data = recvAll(extraSock, 10000)
-            print(ls_data)
+            receiveData(extraSock)
+            #print(ls_data)
             print("ls data received")
         else:
             print("Invalid Input!!! Please try again!")
