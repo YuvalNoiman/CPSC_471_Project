@@ -57,7 +57,8 @@ def main(PORT_NUMBER):
                  extraSock = ephemeral_port(cliSock)
                  ls_message = ""
                  for line in subprocess.getstatusoutput(cliMsg):
-                    ls_message += str(line) + "\n"
+                    if (line != 0):
+                        ls_message += str(line) + "\n"
                  sendData(ls_message.encode(defaultEncoding), extraSock)
                  print("ls message sent")
             extraSock.close()
