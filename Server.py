@@ -63,7 +63,7 @@ def main(PORT_NUMBER):
                  while True:
                      message = ls_message[increment-Max_Sent:increment]
                      if (message):
-                          sendData(ls_message.encode(defaultEncoding), extraSock)
+                          sendData(message.encode(defaultEncoding), extraSock)
                           increment += Max_Sent
                      else:
                           break

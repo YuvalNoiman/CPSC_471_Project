@@ -1,5 +1,5 @@
 # Bytes for the size of the header
-HEADERSIZE = 10
+HEADERSIZE = 4 #keep long enough for Max_Sent to fit
 defaultEncoding = "utf-8"
 queueAmount = 5
 #Max bytes sent at a time
@@ -60,7 +60,7 @@ def receiveData(sock):
         #receive the rest of the file
         data = recvAll(sock, msgSize)
         print("the message data is ", data)
-        return data
+        #return data
 
 #sends File data
 def sendFile(file_name, sock):
