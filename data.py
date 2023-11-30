@@ -51,16 +51,21 @@ def sendData(msg, sock):
 #recievesData
 def receiveData(sock):
     msgSize = Max_Sent
+    full_data = ""
     #keep receiving while the msg hasn't been fully transferred
     while msgSize > Max_Sent-1:
         #receive Header bytes, should be size of data sent
         msgBuff = recvAll(sock, HEADERSIZE)
-        msgSize = int(msgBuff)
+        try:
+            msgSize = int(msgBuff)
+        except:
+            return False
         print("the message size is ", msgSize)
         #receive the rest of the file
         data = recvAll(sock, msgSize)
+        full_data += data
         print("the message data is ", data)
-        #return data
+    return full_data
 
 #sends File data
 def sendFile(file_name, sock):
@@ -86,31 +91,13 @@ def sendFile(file_name, sock):
 
 #receives File data
 def recvFile(msg, sock):
-    file_exists = True
     file_name = msg[4:]
-    fileSize = Max_Sent
-    #keep receiving while the file hasn't been fully transferred
-    while fileSize > Max_Sent-1:
-        #receive Header bytes, should be size of data sent
-        fileSizeBuff = recvAll(sock, HEADERSIZE)
-        try:
-            fileSize = int(fileSizeBuff)
-        #if file does not exist lets both know
-        except:
-            print("File does not exist!!!")
-            file_exists = False
-            break
-        print("the file size is ", fileSize)
-        #receive the rest of the file
-        file_data = recvAll(sock, fileSize)
-        print("the file data is ", file_data)
-        #open a file and append to it
-        file = open(file_name, "a")
-        #file = open(file_name, "wb") for png and pdf
-        #file_data = file_data.encode(defaultEncoding) for png and pdf
-        file.write(file_data) #for png and pdf need to send all data at once cannot break it apart
-    #if file exists it will close connection and file
-    if file_exists:
-        file.close()
-        print("file data received")
-    #file_exists = True
+    file_data = receiveData(sock)
+    if file_data == False:
+        print("File does not exist!!!")
+        return False
+    file = open(file_name, "wb")
+    file_data = file_data.encode(defaultEncoding)
+    file.write(file_data)
+    file.close()
+    print("file data received")
