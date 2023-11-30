@@ -1,6 +1,6 @@
 # Bytes for the size of the header
 HEADERSIZE = 4 #keep long enough for Max_Sent to fit
-defaultEncoding = "utf-8"
+defaultEncoding = "utf-8"  #png and pdf use "ISO-8859-1"
 queueAmount = 5
 #Max bytes sent at a time
 Max_Sent = 1024
@@ -106,7 +106,9 @@ def recvFile(msg, sock):
         print("the file data is ", file_data)
         #open a file and append to it
         file = open(file_name, "a")
-        file.write(file_data)
+        #file = open(file_name, "wb") for png and pdf
+        #file_data = file_data.encode(defaultEncoding) for png and pdf
+        file.write(file_data) #for png and pdf need to send all data at once cannot break it apart
     #if file exists it will close connection and file
     if file_exists:
         file.close()
