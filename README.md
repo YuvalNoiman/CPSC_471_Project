@@ -35,7 +35,7 @@ ftp> put FILENAME
 ### LS
 List all files in the current directory.
 ```sh
-ftp> ls -l
+ftp> ls
 ```
 
 ### QUIT
