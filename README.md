@@ -9,34 +9,39 @@ Implement a simplified FTP server and FTP client where the client connects to th
 
 
 ## Program Execution Instructions
+Invoke the server and then invoke the client before sending any commands.
 ### Invoke Server
 ```sh
-server.py ...
+python3 -m Server 1234
 ```
 ### Invoke Client
 ```sh
-client.py ...
+python3 -m Client localhost 1234
 ```
 
 ## Using Command-Line Arguments
 ### GET
+Find file from server, and then send to client.
 ```sh
-> get FILENAME
+ftp> get FILENAME
 ```
 
 ### PUT
+Send file from client to server.
 ```sh
-> put FILENAME
+ftp> put FILENAME
 ```
 
 ### LS
+List all files in the current directory.
 ```sh
-> ls
+ftp> ls -l
 ```
 
 ### QUIT
+Close connection between client and server.
 ```sh
-> quit
+ftp> quit
 ```
 
 ### Problems:
