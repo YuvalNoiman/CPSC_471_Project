@@ -7,7 +7,7 @@ def ephemeral_port(cliSock):
     #creates extra socket
     extraSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     extraSock.bind(('',0))
-    extraSock.listen(100)
+    extraSock.listen(queueAmount)
     print("Waiting for extra clients to connect...")
     #gets ephemeral port number
     port = str(extraSock.getsockname()[1])
