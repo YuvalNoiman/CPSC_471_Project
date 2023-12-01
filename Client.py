@@ -10,7 +10,6 @@ def ephemeral_port(cliSock):
     port = int(str(port.decode(defaultEncoding)))
     #connects new socket to port
     extraSock.connect((SERVER_IP, port))
-    #sends data
     print("extra socket connected")
     return extraSock
 
