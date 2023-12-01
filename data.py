@@ -101,3 +101,5 @@ def recvFile(msg, sock):
     file.write(file_data)
     file.close()
     print("file data received")
+    print("file is called: ", file_name)
+    print("bytes received is: ", len(file_data))
